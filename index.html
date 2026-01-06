@@ -49,6 +49,12 @@
           >
             Download JSON
           </button>
+          <button
+            id="downloadRList"
+            class="rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50 active:scale-[.99]"
+          >
+            Download R List
+          </button>
         </div>
       </div>
     </header>
@@ -158,6 +164,24 @@
         const a = document.createElement("a");
         a.href = url;
         a.download = "colour_dis.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+      // download R list
+      document.getElementById("downloadRList").addEventListener("click", () => {
+        let rList = "colour_dis <- list(\n";
+        colours.forEach((c, i) => {
+          rList += `  "${c.name}" = "${c.hex}"`;
+          if (i < colours.length - 1) rList += ",\n";
+        });
+        rList += "\n)";
+        const blob = new Blob([rList], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "colour_dis.R";
         document.body.appendChild(a);
         a.click();
         a.remove();
