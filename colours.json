@@ -1,0 +1,23 @@
+{
+  "colour_dis": [
+    { "name": "deep teal", "hex": "#006d77" },
+    { "name": "seafoam green", "hex": "#83c5be" },
+    { "name": "steel blue", "hex": "#457b9d" },
+    { "name": "pale aqua", "hex": "#a8dadc" },
+    { "name": "raspberry pink", "hex": "#ef476f" },
+    { "name": "cotton candy pink", "hex": "#ffb4c8" },
+    { "name": "buttermilk yellow", "hex": "#FFF3B0" },
+    { "name": "sunny sand", "hex": "#FDE68A" },
+    { "name": "mint pastel", "hex": "#C7E9C0" },
+    { "name": "fresh mint", "hex": "#74C69D" },
+    { "name": "sherbet orange", "hex": "#FFD8A8" },
+    { "name": "apricot glow", "hex": "#FBBF77" },
+    { "name": "paper ivory", "hex": "#FDFCF7" },
+    { "name": "linen cream", "hex": "#F4EFEA" },
+    { "name": "soft greige", "hex": "#E8E6E1" },
+    { "name": "cool slate", "hex": "#C6C8CA" },
+    { "name": "mid slate grey", "hex": "#9FA3A9" },
+    { "name": "graphite grey", "hex": "#6E7582" },
+    { "name": "deep slate", "hex": "#2F3E46" }
+  ]
+}

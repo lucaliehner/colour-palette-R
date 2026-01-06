@@ -1,0 +1,168 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Colour palette</title>
+    <meta
+      name="description"
+      content="Nice cards for each colour with name and hex code."
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      /* smooth fade-in */
+      .fade-in {
+        animation: fadeIn 0.4s ease-out both;
+      }
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: translateY(4px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+    </style>
+  </head>
+  <body class="bg-neutral-50 text-neutral-900 antialiased">
+    <header
+      class="sticky top-0 z-10 backdrop-blur bg-white/70 border-b border-neutral-200"
+    >
+      <div
+        class="mx-auto max-w-6xl px-4 py-4 flex flex-col gap-3 md:flex-row md:items-center md:justify-between"
+      >
+        <h1 class="text-2xl font-semibold tracking-tight">
+          Colour palette for R graphs
+        </h1>
+        <div class="flex w-full md:w-auto items-center gap-2">
+          <input
+            id="search"
+            type="text"
+            placeholder="Filter by name or hex…"
+            class="w-full md:w-80 rounded-xl border border-neutral-300 bg-white px-3 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-neutral-800"
+          />
+          <button
+            id="downloadJson"
+            class="rounded-xl border border-neutral-300 bg-white px-3 py-2 text-sm shadow-sm hover:bg-neutral-50 active:scale-[.99]"
+          >
+            Download JSON
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <main class="mx-auto max-w-6xl px-4 py-8">
+      <div
+        id="grid"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5"
+      ></div>
+    </main>
+
+    <template id="cardTpl">
+      <article
+        class="fade-in rounded-2xl overflow-hidden border border-neutral-200 bg-white shadow-sm hover:shadow-md transition-shadow"
+      >
+        <div class="h-28 w-full" data-role="swatch"></div>
+        <div class="p-4 flex items-start justify-between gap-3">
+          <div>
+            <h2
+              class="text-base font-medium leading-tight"
+              data-role="name"
+            ></h2>
+            <p class="text-sm text-neutral-600 font-mono" data-role="hex"></p>
+          </div>
+          <div class="flex gap-2">
+            <button
+              class="copy-btn rounded-lg border border-neutral-300 px-2.5 py-1.5 text-sm hover:bg-neutral-50"
+              title="Copy hex"
+            >
+              Copy
+            </button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script>
+      const colours = [
+        { name: "deep teal", hex: "#006d77" },
+        { name: "seafoam green", hex: "#83c5be" },
+        { name: "steel blue", hex: "#457b9d" },
+        { name: "pale aqua", hex: "#a8dadc" },
+        { name: "raspberry pink", hex: "#ef476f" },
+        { name: "cotton candy pink", hex: "#ffb4c8" },
+        { name: "buttermilk yellow", hex: "#FFF3B0" },
+        { name: "sunny sand", hex: "#FDE68A" },
+        { name: "mint pastel", hex: "#C7E9C0" },
+        { name: "fresh mint", hex: "#74C69D" },
+        { name: "sherbet orange", hex: "#FFD8A8" },
+        { name: "apricot glow", hex: "#FBBF77" },
+        { name: "paper ivory", hex: "#FDFCF7" },
+        { name: "linen cream", hex: "#F4EFEA" },
+        { name: "soft greige", hex: "#E8E6E1" },
+        { name: "cool slate", hex: "#C6C8CA" },
+        { name: "mid slate grey", hex: "#9FA3A9" },
+        { name: "graphite grey", hex: "#6E7582" },
+        { name: "deep slate", hex: "#2F3E46" },
+      ];
+
+      const grid = document.getElementById("grid");
+      const tpl = document.getElementById("cardTpl");
+
+      function makeCard({ name, hex }) {
+        const node = tpl.content.cloneNode(true);
+        node.querySelector('[data-role="swatch"]').style.backgroundColor = hex;
+        node.querySelector('[data-role="name"]').textContent = name;
+        node.querySelector('[data-role="hex"]').textContent = hex;
+        const btn = node.querySelector(".copy-btn");
+        btn.addEventListener("click", async () => {
+          try {
+            await navigator.clipboard.writeText(hex);
+            const old = btn.textContent;
+            btn.textContent = "Copied!";
+            setTimeout(() => (btn.textContent = old), 900);
+          } catch (e) {
+            alert("Clipboard not available");
+          }
+        });
+        return node;
+      }
+
+      function render(list) {
+        grid.innerHTML = "";
+        list.forEach((c) => grid.appendChild(makeCard(c)));
+      }
+
+      render(colours);
+
+      // filter
+      const searchInput = document.getElementById("search");
+      searchInput.addEventListener("input", (e) => {
+        const q = e.target.value.trim().toLowerCase();
+        const filtered = colours.filter(
+          (c) =>
+            c.name.toLowerCase().includes(q) || c.hex.toLowerCase().includes(q),
+        );
+        render(filtered);
+      });
+
+      // download JSON
+      document.getElementById("downloadJson").addEventListener("click", () => {
+        const data = { colour_dis: colours };
+        const blob = new Blob([JSON.stringify(data, null, 2)], {
+          type: "application/json",
+        });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "colour_dis.json";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        URL.revokeObjectURL(url);
+      });
+    </script>
+  </body>
+</html>
